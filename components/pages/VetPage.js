@@ -1,16 +1,43 @@
-import { Text, Pressable, Image, FlatList, View } from 'react-native';
+import { memo, useState, useEffect } from 'react';
+import { View, Text, FlatList, Dimensions, Platform } from 'react-native';
+import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import { ref as ref_db, onValue} from "firebase/database";
 import { ref as ref_storage, getDownloadURL, listAll, getMetadata } from "firebase/storage";
-import { db, storage } from "../firebaseConfig";
-import { useEffect, useState } from 'react';
+import { db, storage } from "../../firebaseConfig";
 
-function DisplayPlaces({ onVetPress }) {
+
+/* const Places = [
+    {key: 0, name: "Animal Medical Centre", location: "Kuala Lumpur" , image: require("../../assets/vets/vet1.png")},
+    {key: 1, name: "Leow Veterinary Clinic and Surgery", location:"Kepong", image: require("../../assets/vets/vet2.png")},
+    {key: 2, name: "Kota Damansara Veterinary Centre", location: "Kota Damansara", image: require("../../assets/vets/vet3.png")},
+    {key: 3, name: "Cyberlynx Animal Clinic", location:"Petaling Jaya", image: require("../../assets/vets/vet4.png")},
+    {key: 4, name: "St Angel Animal Medical Centre", location:"Puchong", image: require("../../assets/vets/vet5.png")}
+]; */
+
+function DisplayPage() {
+    const {width: screenWidth} = Dimensions.get("window");
+    const [activeSlide, setActiveSlide] = useState(0);
+
     const [placesList, setPlacesList] = useState([]);
     const [imagesList, setImagesList] = useState([]);
     const [imageNameList, setImageNameList] = useState([]);
     const [isPlacesLoaded, setIsPlacesLoaded] = useState(false);
     const [isImagesLoaded, setIsImagesLoaded] = useState(false);
-    
+
+    const renderItem = ({item, index}, parallaxProps) => {
+        return (
+            <View className="w-full h-80">
+                <ParallaxImage
+                    source={{uri: imagesList[item.index]}}
+                    containerStyle={{flex: 1, marginBottom: Platform.select({ios: 0, android: 1}), backgroundColor: 'white'}}
+                    style={{width: "100%", height: "100%"}}
+                    parallaxFactor={0.4}
+                    {...parallaxProps}
+                />
+            </View>
+        );
+    };
+
     function combineSort() {
         // combine into an array of objects
         let combined = imageNameList.map((e, i) => ({element1: e, element2: imagesList[i]}));
@@ -43,7 +70,7 @@ function DisplayPlaces({ onVetPress }) {
         });
 
         // retrieve store vet location images
-        const imagesRef = ref_storage(storage, 'veterinary-locations')
+        const imagesRef = ref_storage(storage, 'vet-interiors')
         listAll(imagesRef)
             .then((res) => {
                 // asynchronous operation that uses Promise to wait until all promises are resolved through fetching data
@@ -89,30 +116,49 @@ function DisplayPlaces({ onVetPress }) {
 
     return (
         <FlatList
-            contentContainerStyle={{flexDirection: 'column', alignItems: 'center'}}
-            data={placesList}
-            renderItem={({item}) => (
+            contentContainerStyle={{flexDirection: 'column'}}
+            data={[{key: 0}]}
+            renderItem={() => (
                 <>
-                    <View className="flex-col mt-5 mb-10">
-                        <Pressable key={item.index} onPress={() => onVetPress(item.index)} className="flex-col w-96 h-80 rounded-xl bg-orange-400">
-                            <Image source={{uri: imagesList[item.index]}} className="w-96 h-52 rounded-xl" />
-                            <Text className="font-medium text-base justify-start">{item.name}, {item.location}</Text>
-                        </Pressable>
+                    <View className="flex-1 w-full h-80">
+                        <Carousel
+                            ref = {(c) => {this._carousel = c;}}
+                            sliderWidth={screenWidth}
+                            sliderHeight={320}
+                            itemWidth={screenWidth}
+                            data={placesList}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.index}
+                            hasParallaxImages={true}
+                            onSnapToItem={(index) => setActiveSlide(index)}
+                            containerCustomStyle={{ position: 'absolute', backgroundColor: 'transparent'}}
+                            contentContainerStyle={{ flex: 1 }}
+                        />
+                        <Pagination
+                            dotsLength={placesList.length}
+                            activeDotIndex={activeSlide}
+                            containerStyle={{ backgroundColor: 'transparent', top: '60%'}}
+                            dotStyle={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: 5,
+                                marginHorizontal: 8,
+                                backgroundColor: 'white'
+                            }}
+                            inactiveDotOpacity={0.4}
+                            inactiveDotScale={0.6}
+                        />
                     </View>
                 </>
             )}
-            keyExtractor={item => item.index}
+            keyExtractor={item => item.key}
             className=""
-         />
+        />
     );
 }
 
-export default function ScrollingList({ onReceiveInput }) {
-    function handleVetPress(index) {
-        onReceiveInput("VetPage", index);
-    }
-
+export default function VetPage({ onReceiveIndex }) {
     return (
-        <DisplayPlaces onVetPress={(index) => handleVetPress(index)} />
+        <DisplayPage />
     );
 }
