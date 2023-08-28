@@ -6,7 +6,6 @@ import useDataFetch from '../interaction_events/DataFetch';
 function DisplayPage({ receivedIndex }) {
     const [isLoading, setIsLoading] = useState(true);
     const [placesList, imagesList] = useDataFetch('vet-interiors');
-
     useEffect(() => {
         if (placesList.length > 0 && imagesList.length > 0) {
             setIsLoading(false);

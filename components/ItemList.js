@@ -1,8 +1,8 @@
 import { Text, Pressable, Image, FlatList, View } from 'react-native';
-import DataFetch from './interaction_events/DataFetch';
+import useDataFetch from './interaction_events/DataFetch';
 
 function DisplayPlaces({ onVetPress }) {
-    const [placesList, imagesList] = DataFetch('veterinary-locations');
+    const [placesList, imagesList] = useDataFetch('veterinary-locations');
 
     return (
         <FlatList
