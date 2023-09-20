@@ -44,7 +44,7 @@ function DisplayTimeSlots({ receivedDate, confirmTime }) {
                 <View>
                     <TimeSlotPicker
                         slotResult={slot => {setSelectedTimeSlot(slot)}}
-                        timeSlotInterval={15}
+                        timeSlotInterval={30}
                         weekDayFromTime={'08:00'}
                         weekDayToTime={'18:00'}
                         weekendFromTime={'08:00'}

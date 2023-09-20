@@ -4,7 +4,8 @@ import { useState } from 'react';
 const Categories = [
     {category: "Home", icon: require("../assets/home_icon.png")},
     {category: "Health", icon: require("../assets/heartplus_icon.png")},
-    {category: "Pets", icon: require("../assets/pets_icon.png")}
+    {category: "Pets", icon: require("../assets/pets_icon.png")},
+    {category: "Profile", icon: require("../assets/profile_icon.png")},
 ];
 
 function DisplayCategories({ categories, onCategoryPress }) {
@@ -20,8 +21,10 @@ function DisplayCategories({ categories, onCategoryPress }) {
     });
 
     return (
-        <View className="top-10 flex-row items-start justify-evenly w-full h-28">
-            {items}
+        <View className="w-full h-24 bg-white">
+            <View className="flex-row items-center justify-evenly w-full h-24">
+                {items}
+            </View>
         </View>
     );
 }

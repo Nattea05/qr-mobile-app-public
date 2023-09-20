@@ -35,6 +35,7 @@ function DisplayPage({ receivedIndex, onViewAppointments }) {
             </View>
         );
     }
+    
     return (
         <FlatList
             contentContainerStyle={{flexDirection: 'column'}}

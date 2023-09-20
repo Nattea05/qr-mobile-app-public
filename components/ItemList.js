@@ -11,7 +11,7 @@ function DisplayPlaces({ onVetPress }) {
             renderItem={({item}) => (
                 <>
                     <View className="flex-col mt-5 mb-10">
-                        <Pressable key={item.index} onPress={() => onVetPress(item.index)} className="flex-col w-96 h-80 rounded-xl bg-orange-400">
+                        <Pressable key={item.index} onPress={() => onVetPress(item.index)} className="flex-col w-96 h-80 rounded-xl bg-petgreen">
                             <Image source={{uri: imagesList[item.index]}} className="w-96 h-52 rounded-xl" />
                             <Text className="font-medium text-base justify-start">{item.name}, {item.location}</Text>
                         </Pressable>

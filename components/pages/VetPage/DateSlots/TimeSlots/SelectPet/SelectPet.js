@@ -1,11 +1,13 @@
 import { Text, View, Pressable, TextInput, Alert } from 'react-native';
+import { onAuthStateChanged } from 'firebase/auth';
 import { ref as ref_db, set} from "firebase/database";
-import { db } from "../../../../../../firebaseConfig";
+import { db, auth } from "../../../../../../firebaseConfig";
 import { useState } from 'react';
 import { formatDate } from "../TimeSlots"
 
-function confirmAppointment(date, time, vetIndex, reason) {
-    const appointmentsRef = ref_db(db, 'appointments/a0');
+function confirmAppointment(uid, date, time, vetIndex, reason) {
+    const appointmentID = uid.slice(0, 5) + date.replace(/-/g, "") + time.replace(/:/g, "")
+    const appointmentsRef = ref_db(db, 'appointments/' + appointmentID);
     set(appointmentsRef, {
         date: date,
         time: time,
@@ -15,8 +17,15 @@ function confirmAppointment(date, time, vetIndex, reason) {
 }
 
 function DisplaySelectPet({ receivedData, onConfirm }) {
+    const [uid, setUid] = useState('');
     const date = formatDate(receivedData.date)[0]
     const [text, onChangeText] = useState('');
+
+    function falseAuth() {
+        return (
+            <Text className="text-4xl font-bold text-center self-center">There is an authentication issue. Please login again.</Text>
+        )
+    }    
 
     function alert () {
         Alert.alert('Reason not stated', 'Please state your reason for the appointment', [
@@ -29,6 +38,14 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
         }
         )
     }
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUid(user.uid)
+        } else {
+            falseAuth()
+        }
+    })
     
     return (
         <View className="flex flex-col w-full h-full items-center">
@@ -45,7 +62,7 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
             />
             <Pressable
                 className='mt-5 w-2/5 h-16 self-center rounded-xl bg-petgreen active:bg-activepetgreen justify-center'
-                onPress={() => (text ? onConfirm(text) : alert())}
+                onPress={() => (text ? onConfirm(uid, text) : alert())}
             >
                 <Text className='font-bold text-black text-2xl self-center'>Confirm</Text>
             </Pressable>
@@ -57,7 +74,7 @@ export default function SelectPet({ onReceiveData }) {
     return (
         <DisplaySelectPet
             receivedData={onReceiveData} 
-            onConfirm={(reason) => confirmAppointment(onReceiveData.date, onReceiveData.slot, onReceiveData.vetIndex, reason)}
+            onConfirm={(uid, reason) => confirmAppointment(uid, onReceiveData.date, onReceiveData.slot, onReceiveData.vetIndex, reason)}
         />
     )
 }
