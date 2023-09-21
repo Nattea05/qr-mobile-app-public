@@ -1,9 +1,8 @@
 import { View, Text, Pressable, ImageBackground, TextInput } from 'react-native';
 import { useEffect, useState } from 'react';
-import { auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { ref as ref_db, set } from 'firebase/database';
-import { db } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig';
 import Logo from '../assets/petlogo.svg';
 
 function DisplaySignUp({ onLogin }) {

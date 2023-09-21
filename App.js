@@ -89,7 +89,7 @@ function SelectPetScreen({ navigation, route }) {
   const {confirmedTime} = route.params
   return (
     <View className="flex-1 w-full h-full bg-white">
-      <SelectPet onReceiveData={confirmedTime} />
+      <SelectPet onReceiveData={confirmedTime} successfulConfirmation={(page) => navigation.reset({index: 0, routes: [{ name: "Home" }]})} />
     </View>
   )
 }

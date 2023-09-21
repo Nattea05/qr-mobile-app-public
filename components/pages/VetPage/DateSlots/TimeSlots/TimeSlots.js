@@ -1,8 +1,7 @@
 import { Text, View, LogBox } from 'react-native';
 import { NativeBaseProvider } from 'native-base'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TimeSlotPicker } from 'react-native-timeslots-picker';
-import useDataFetch from '../../../../interaction_events/DataFetch';
 LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.']);
 
 export function formatDate(inputDate) {
@@ -32,7 +31,7 @@ export function formatDate(inputDate) {
     return [formattedDate, dayOfWeek];
   }
 
-function DisplayTimeSlots({ receivedDate, confirmTime }) {
+function DisplayTimeSlots({ receivedDate, receivedVetIndex, confirmTime }) {
     const [date, dayOfWeek] = formatDate(receivedDate)
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
 
@@ -53,6 +52,7 @@ function DisplayTimeSlots({ receivedDate, confirmTime }) {
                         width='300px'
                         onConfirm={selectedSlot => confirmTime(selectedSlot)}
                         dayOfWeek={dayOfWeek}
+                        appointmentData={{selectedDate: receivedDate, selectedVet: receivedVetIndex}}
                     />
                 </View>
             </NativeBaseProvider>
@@ -66,6 +66,6 @@ export default function TimeSlots({ onReceiveData, onConfirmedTime }) {
     }
 
     return (
-        <DisplayTimeSlots receivedDate={onReceiveData.selectedDate} confirmTime={(selectedSlot) => handleConfirmTime(selectedSlot)} />
+        <DisplayTimeSlots receivedDate={onReceiveData.selectedDate} receivedVetIndex={onReceiveData.vetIndex} confirmTime={(selectedSlot) => handleConfirmTime(selectedSlot)} />
     )
 }
