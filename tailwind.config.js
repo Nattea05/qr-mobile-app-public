@@ -6,7 +6,9 @@ module.exports = {
     extend: {
       colors: {
         petgreen: '#45e14f',
-        activepetgreen: '#22d12d'
+        activepetgreen: '#22d12d',
+        cancel: '#ff5454',
+        activecancel: '#ff1212',
       },
     },
   },

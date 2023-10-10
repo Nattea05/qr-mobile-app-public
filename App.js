@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,6 +12,10 @@ import TimeSlots from './components/pages/VetPage/DateSlots/TimeSlots/TimeSlots'
 import SelectPet from './components/pages/VetPage/DateSlots/TimeSlots/SelectPet/SelectPet';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import Activity from './components/pages/Activity/Activity';
+import UpcomingDetails from './components/pages/Activity/UpcomingDetails';
+import History from './components/pages/Activity/History/History';
+import Emr from './components/pages/Activity/History/Emr/Emr';
 import Profile from './components/pages/Profile/Profile';
 
 const Stack = createNativeStackNavigator();
@@ -94,6 +99,52 @@ function SelectPetScreen({ navigation, route }) {
   )
 }
 
+function ActivityScreen({ navigation }) {
+  return (
+    <View className="flex-1 bg-white">
+      <Activity receiveNavigation={(page, appointmentDetails) => {
+        page === "Activity"
+          ? navigation.reset({
+            index: 1,
+            routes: [{name: "Home"}, {name: page}]
+            })
+          : navigation.navigate(page, {appointmentDetails: appointmentDetails})}} />
+      <CategoryRow onReceiveInput={(page) => navigation.navigate(page)} />
+    </View>
+  );
+}
+
+function UpcomingDetailsScreen({ navigation, route }) {
+  const {appointmentDetails} = route.params
+
+  return (
+    <View className="flex-1 bg-white">
+      <UpcomingDetails onReceiveAppointmentDetails={appointmentDetails} />
+      <CategoryRow onReceiveInput={(page) => navigation.navigate(page)} />
+    </View>
+  );
+}
+
+function HistoryScreen({ navigation }) {
+  return (
+    <View className="flex-1 bg-white">
+      <History receiveNavigation={(page, history) => navigation.navigate(page, {historyDetails: history})} />
+      <CategoryRow onReceiveInput={(page) => navigation.navigate(page)} />
+    </View>
+  );
+}
+
+function EmrScreen({ navigation, route }) {
+  const {historyDetails} = route.params
+
+  return (
+    <View className="flex-1 bg-white">
+      <Emr onReceiveHistoryDetails={historyDetails} receiveNavigation={(page) => navigation.navigate(page)} />
+      <CategoryRow onReceiveInput={(page) => navigation.navigate(page)} />
+    </View>
+  );
+}
+
 function ProfileScreen({ navigation }) {
   return (
     <View className="flex-1 bg-white">
@@ -106,7 +157,7 @@ function ProfileScreen({ navigation }) {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{headerShown: false, animation: "fade"}}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -116,6 +167,10 @@ export default function App() {
         <Stack.Screen name="DateSlots" component={DateSlotsScreen} />
         <Stack.Screen name="TimeSlots" component={TimeSlotsScreen} />
         <Stack.Screen name="SelectPet" component={SelectPetScreen} />
+        <Stack.Screen name="Activity" component={ActivityScreen} />
+        <Stack.Screen name="UpcomingDetails" component={UpcomingDetailsScreen} />
+        <Stack.Screen name="History" component={HistoryScreen} />
+        <Stack.Screen name="Emr" component={EmrScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>

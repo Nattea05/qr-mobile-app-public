@@ -84,11 +84,11 @@ function DisplayPets({ onNavigation }) {
 
     return (
         <SafeAreaView className="flex-1 flex-col items-center">
-            <View className="flex flex-row w-full h-36 rounded-xl bg-petgreen justify-evenly items-center">
+            <View className="flex flex-row pt-5 w-full h-40 rounded-b-xl bg-petgreen justify-evenly items-center">
                 <Text className="font-bold text-5xl">Your Pets</Text>
-                <Pressable className="flex flex-col items-center w-20 h-20 rounded-full bg-white" onPress={() => onNavigation("AddPet")}>
+                <Pressable className="flex flex-col items-center w-24 h-24 rounded-full bg-white" onPress={() => onNavigation("AddPet")}>
                     <AddLogo height={48} width={48} style={{top: 5}} />
-                    <Text className="font-medium text-sm">Add pet</Text>
+                    <Text className="mt-2 font-medium text-sm">Add pet</Text>
                 </Pressable>
             </View>
             <ScrollView className="w-full" contentContainerStyle={{alignItems: "center"}}>

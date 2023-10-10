@@ -85,7 +85,7 @@ function DisplayAddPet({ onAddPet }) {
 
     return (
         <SafeAreaView className="flex-1 flex-col items-center">
-            <View className="flex flex-row w-full h-36 rounded-xl bg-petgreen items-center">
+            <View className="flex flex-row pt-5 w-full h-40 rounded-xl bg-petgreen items-center">
                 <Text className="font-bold text-5xl left-10">Add Pet</Text>
             </View>
             <ScrollView className="w-full" contentContainerStyle={{alignItems: "center"}}>

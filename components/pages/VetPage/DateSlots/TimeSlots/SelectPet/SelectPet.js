@@ -109,6 +109,7 @@ export default function SelectPet({ onReceiveData, successfulConfirmation }) {
                 time: time,
                 vetIndex: vetIndex,
                 petID: selectedPet,
+                ownID: uid,
                 reason: reason
             });
 

@@ -6,20 +6,20 @@ function DisplayPlaces({ onVetPress }) {
 
     return (
         <FlatList
-            contentContainerStyle={{flexDirection: 'column', alignItems: 'center'}}
+            className="w-full mt-10"
+            contentContainerStyle={{paddingBottom: 20, display: "flex", flexDirection: 'column', gap: 50, alignItems: 'stretch'}}
             data={placesList}
             renderItem={({item}) => (
                 <>
-                    <View className="flex-col mt-5 mb-10">
-                        <Pressable key={item.index} onPress={() => onVetPress(item.index)} className="flex-col w-96 h-80 rounded-xl bg-petgreen">
-                            <Image source={{uri: imagesList[item.index]}} className="w-96 h-52 rounded-xl" />
+                    <View className="flex flex-col w-10/12 h-96 self-center rounded-xl bg-petgreen">
+                        <Pressable key={item.index} onPress={() => onVetPress(item.index)} className="flex-1 flex flex-col rounded-xl">
+                            <Image source={{uri: imagesList[item.index]}} className="w-full h-64 rounded-xl" />
                             <Text className="font-medium text-base justify-start">{item.name}, {item.location}</Text>
                         </Pressable>
                     </View>
                 </>
             )}
             keyExtractor={item => item.index}
-            className=""
          />
     );
 }

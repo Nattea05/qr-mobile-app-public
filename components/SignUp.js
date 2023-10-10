@@ -52,7 +52,7 @@ function DisplaySignUp({ onLogin }) {
     return (
         <View className="flex flex-col w-full h-full items-center">
             <View className="w-full h-80">
-                <ImageBackground className="h-full flex-1 justify-center overflow-hidden rounded-2xl" source={require("../assets/Login_Signup/SignUpImage.jpg")} resizeMode='cover'>
+                <ImageBackground className="h-full flex-1 justify-center overflow-hidden rounded-b-2xl" source={require("../assets/Login_Signup/SignUpImage.jpg")} resizeMode='cover'>
                     <View className="flex flex-col justify-center w-full h-full bg-black/40">
                         <Text className="font-light text-5xl text-white text-center tracking-wider">Hello!</Text>
                         <Text className="mt-3 font-light text-2xl text-white text-center tracking-wider">Sign up to use our services</Text>
