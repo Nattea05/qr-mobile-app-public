@@ -2,21 +2,23 @@ import { Text, View, SafeAreaView, ScrollView, Image, Pressable } from 'react-na
 import { useEffect, useState } from 'react';
 import { ref as ref_db, onValue } from 'firebase/database';
 import { db } from '../../../../../firebaseConfig';
+import { createStackNavigator } from '@react-navigation/stack';
 import QR from '../../../../../assets/svg_logos/qr.svg'
 import moment from "moment"
 
-function DisplayEmr({ receivedHistoryDetails, onNavigation, onQr }) {
+const EmrStack = createStackNavigator()
+
+function DisplayEmr({ receivedHistoryDetails, onQrModal }) {
     const [historyDetails, setHistoryDetails] = useState(receivedHistoryDetails)
     const [emrData, setEmrData] = useState({})
     const [isEmrDataLoaded, setIsEmrDataLoaded] = useState(false)
-    const emrID = historyDetails.ownID.slice(0, 5) + historyDetails.date.replace(/-/g, '') + historyDetails.time.replace(/:/g, '') + "vet" + historyDetails.vetIndex.toString()
-    const [qrData, setQrData] = useState({})
 
     function capitalizeWords(string) {
         return string.split(/(?=[A-Z])/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
     }
 
     useEffect(() => {
+        const emrID = historyDetails.ownID.slice(0, 5) + historyDetails.date.replace(/-/g, '') + historyDetails.time.replace(/:/g, '') + "vet" + historyDetails.vetIndex.toString()
         const emrRef = ref_db(db, "emr_list/" + emrID)
         const updatedEmrData = {...emrData}
         const emrListener = onValue(emrRef, (snapshot) => {
@@ -28,8 +30,6 @@ function DisplayEmr({ receivedHistoryDetails, onNavigation, onQr }) {
                     updatedEmrData.objective = data[key]
                 } else if (key === "assessment") {
                     updatedEmrData.assessment = data[key]
-                } else if (key === "patientID") {
-                    updatedEmrData.patientID = data[key]
                 }
             })
             setEmrData(updatedEmrData)
@@ -41,20 +41,13 @@ function DisplayEmr({ receivedHistoryDetails, onNavigation, onQr }) {
         }
     }, [])
 
-    useEffect(() => {
-        if (isEmrDataLoaded) {
-            setQrData({
-                [emrID]: emrData,
-                ["ownID"]: historyDetails.ownID
-            })
-        }
-    }, [isEmrDataLoaded])
+    useEffect(() => {if (isEmrDataLoaded) {}}, [isEmrDataLoaded])
 
     return (
-        <SafeAreaView className="flex-1 flex-col items-center">
+        <SafeAreaView className="flex-1 flex-col items-center bg-white">
             <View className="flex flex-row pt-5 w-full h-40 rounded-b-xl bg-petgreen justify-evenly items-center">
                 <Text className="font-bold text-3xl">{moment(historyDetails.date).format("MMMM Do YYYY")}</Text>
-                <Pressable className="flex flex-col w-24 h-24 items-center rounded-full bg-white" onPress={() => onQr("Qr", qrData)}>
+                <Pressable className="flex flex-col w-24 h-24 items-center rounded-full bg-white" onPress={() => onQrModal("QrModalScreen")}>
                     <QR height={50} width={50} style={{top: 5}}/>
                     <Text className="mt-2 font-medium text-lg">QR</Text>
                 </Pressable>
@@ -62,7 +55,7 @@ function DisplayEmr({ receivedHistoryDetails, onNavigation, onQr }) {
             <ScrollView className="w-full" contentContainerStyle={{alignItems: "center"}}>
                 <View className="flex flex-col p-3 w-full items-center">
                     <View className="flex-1 flex flex-row pb-7 w-full justify-evenly border-b-2 border-petgreen">
-                        <View className="flex items-center">
+                        <View className="flex pt-2 items-center">
                             <Image source={{uri: historyDetails.url}} className="w-32 h-32 rounded-xl" />
                             <Text className="mt-3 font-medium text-xl">{historyDetails.petID.slice(5)}</Text>
                         </View>
@@ -158,16 +151,29 @@ function DisplayEmr({ receivedHistoryDetails, onNavigation, onQr }) {
     )
 }
 
-export default function Emr({ openQr, receiveNavigation, onReceiveHistoryDetails }) {
-    function handleQr(page, qrData) {
-        openQr(page, qrData)
+export default function Emr({ onReceiveHistoryDetails }) {
+    function EmrScreen({ navigation }) {
+        return (
+            <DisplayEmr receivedHistoryDetails={onReceiveHistoryDetails} onQrModal={(page) => navigation.navigate(page)} />
+        )
     }
 
-    function handleNavigation(page) {
-        receiveNavigation(page)
+    function QrModalScreen({ navigation }) {
+        return (
+            <View className="flex-1 flex bg-petgreen">
+
+            </View>
+        )
     }
 
     return (
-        <DisplayEmr onQr={(page, qrData) => handleQr(page, qrData)} onNavigation={(page) => handleNavigation(page)} receivedHistoryDetails={onReceiveHistoryDetails} />
+        <EmrStack.Navigator screenOptions={{headerShown: false, animation: "slide_from_bottom"}}>
+            <EmrStack.Group>
+                <EmrStack.Screen name="EmrScreen" component={EmrScreen} />
+            </EmrStack.Group>
+            <EmrStack.Group screenOptions={{ presentation: 'modal' }}>
+                <EmrStack.Screen name="QrModalScreen" component={QrModalScreen} />
+            </EmrStack.Group>
+        </EmrStack.Navigator>
     )
 }

@@ -16,6 +16,8 @@ function DisplayAddPet({ onAddPet }) {
         species: '',
         breed: '',
         sex: '',
+        age: '',
+        conditions: '',
     });
 
     function alert () {
@@ -85,10 +87,10 @@ function DisplayAddPet({ onAddPet }) {
 
     return (
         <SafeAreaView className="flex-1 flex-col items-center">
-            <View className="flex flex-row pt-5 w-full h-40 rounded-xl bg-petgreen items-center">
+            <View className="flex flex-row pt-5 w-full h-40 rounded-b-xl bg-petgreen items-center">
                 <Text className="font-bold text-5xl left-10">Add Pet</Text>
             </View>
-            <ScrollView className="w-full" contentContainerStyle={{alignItems: "center"}}>
+            <ScrollView className="w-full" contentContainerStyle={{paddingBottom: 30, alignItems: "center"}}>
                 <Pressable onPress={() => setShowModal(true)} className={`justify-center items-center w-40 h-40 mt-10 ${image ? "border-4 border-white" : "border-dashed border-4 border-gray-300"}`}>
                     <AddPhotoIcon width={100} height={100} style={{left: 5 }} />
                     {image && <Image resizeMode="cover" resizeMethod="scale" className="absolute w-full h-full rounded-xl" source={{uri: image}} />}
@@ -96,9 +98,15 @@ function DisplayAddPet({ onAddPet }) {
                 {Object.keys(textInput).map((field) => (
                     <TextInput
                         key={field}
-                        className="w-11/12 h-16 p-5 mt-5 font-semibold align-text-top text-xl border-b-2 border-gray-300"
+                        className="w-11/12 h-16 p-3 mt-5 font-semibold align-text-top text-xl border-b-2 border-gray-300"
                         style={{textAlignVertical: "top"}}
-                        placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                        placeholder={
+                            field === "species"
+                                ? field.charAt(0).toUpperCase() + field.slice(1) + " (e.g. Dog, Cat)"
+                                : field === "breed"
+                                ? field.charAt(0).toUpperCase() + field.slice(1) + " (e.g. Shiba, Siamese)"
+                                : field.charAt(0).toUpperCase() + field.slice(1)
+                        }
                         placeholderTextColor={"#cbcbcb"}
                         multiline={false}
                         onChangeText={(text) => {

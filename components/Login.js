@@ -1,14 +1,16 @@
-import { View, Text, Pressable, ImageBackground, TextInput } from 'react-native';
+import { View, Text, Pressable, ImageBackground, TextInput, ScrollView, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 import { auth } from '../firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import Logo from '../assets/petlogo.svg';
 
-function DisplayLogin({ onInput }) {
-    const [emailText, onChangeEmailText] = useState('');
-    const [passwordText, onChangePasswordText] = useState('');
+function DisplayLogin({ receivedNewEmail, onInput }) {
+    const [emailText, onChangeEmailText] = useState('natliew05@gmail.com');
+    const [passwordText, onChangePasswordText] = useState('Test12345');
+    const [focusedInput, setFocusedInput] = useState('')
+    const newEmail = receivedNewEmail
 
-    function loginAccount() {
+    function loginAccount() {        
         signInWithEmailAndPassword(auth, emailText, passwordText)
             .then((userCredential) => {
                 // Signed in
@@ -16,16 +18,28 @@ function DisplayLogin({ onInput }) {
                 onInput("Home");
             })
             .catch((error) => {
-                if (error.code === 'auth/invalid-email' || error.code === 'auth/missing-password' || error.code === 'auth/invalid-login-credentials') {
+                if (error.code === 'auth/invalid-email' || error.code === 'auth/missing-password' || error.code === 'auth/invalid-login-credentials' || error.code === 'auth/wrong-password') {
                     alert('Invalid email or password')
                 } else {
-                    console.log(`${error.code}: ${error.message}`)
+                    console.log("Error logging in: " + error)
                 }
-            })
+            })            
     }
+    
+    useEffect(() => {
+        if (newEmail) {
+            Alert.alert('Email Verification Required', 'An email with a verification link has been sent to your new email address. Please check your inbox and follow the link to verify your email address and complete the update process.', [
+              {
+                  text: 'OK'
+              }
+            ],
+            {cancelable: true}
+            )
+        }
+    }, [newEmail])
 
     return (
-        <View className="flex flex-col w-full h-full items-center">
+        <ScrollView className="w-full" contentContainerStyle={{alignItems: "center"}}>
             <View className="w-full h-80">
                 <ImageBackground className="h-full flex-1 justify-center overflow-hidden rounded-b-2xl" source={require("../assets/Login_Signup/LoginImage.jpg")} resizeMode='cover'>
                     <View className="flex flex-col justify-center w-full h-full bg-black/40">
@@ -37,18 +51,22 @@ function DisplayLogin({ onInput }) {
             </View>
             <View className="flex flex-col w-full h-full items-center">
                 <TextInput
-                    className="w-8/12 h-16 p-5 mt-20 border-2 border-gray-200 rounded-xl text-xl font-semibold align-text-top"
+                    className="w-8/12 h-16 p-5 mt-20 border-2 border-gray-200 rounded-xl text-xl font-semibold align-text-top focus:border-petgreen"
                     style={{textAlignVertical: "top"}}
                     placeholder="Email"
-                    placeholderTextColor="#cbcbcb"
+                    placeholderTextColor={focusedInput === 'email' ? "#45e14f" : "#cbcbcb"}
+                    onFocus={() => setFocusedInput('email')}
+                    onBlur={() => setFocusedInput('')}
                     multiline={false}
                     onChangeText={onChangeEmailText}
                 />
                 <TextInput
-                    className="w-8/12 h-16 p-5 mt-10 border-2 border-gray-200 rounded-xl text-xl font-semibold align-text-top"
+                    className="w-8/12 h-16 p-5 mt-10 border-2 border-gray-200 rounded-xl text-xl font-semibold align-text-top focus:border-petgreen"
                     style={{textAlignVertical: "top"}}
                     placeholder="Password"
-                    placeholderTextColor="#cbcbcb"
+                    placeholderTextColor={focusedInput === 'password' ? "#45e14f" : "#cbcbcb"}
+                    onFocus={() => setFocusedInput('password')}
+                    onBlur={() => setFocusedInput('')}
                     multiline={false}
                     secureTextEntry={true}
                     onChangeText={onChangePasswordText}
@@ -63,16 +81,16 @@ function DisplayLogin({ onInput }) {
                     Don't have an account? <Text className="text-petgreen" onPress={() => onInput("SignUp")}>Register here</Text>
                 </Text>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
-export default function Login({ onReceiveNavigation }) {
+export default function Login({ onReceiveNewEmail, onReceiveNavigation }) {
     function handleInput(page) {
         onReceiveNavigation(page)
     }
 
     return (
-        <DisplayLogin onInput={(page) => handleInput(page)} />
+        <DisplayLogin receivedNewEmail={onReceiveNewEmail} onInput={(page) => handleInput(page)} />
     )
 }

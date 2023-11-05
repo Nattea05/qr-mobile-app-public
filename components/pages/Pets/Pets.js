@@ -6,7 +6,7 @@ import { ref as ref_storage, getDownloadURL, getMetadata, listAll } from 'fireba
 import { db, auth, storage } from '../../../firebaseConfig';
 import AddLogo from '../../../assets/svg_logos/add.svg';
 
-function DisplayPets({ onNavigation }) {
+function DisplayPets({ onNavigation, onNavigatePet }) {
     const [uid, setUid] = useState('');
     const [petData, setPetData] = useState([]);
     const [petImages, setPetImages] = useState([]);
@@ -94,7 +94,7 @@ function DisplayPets({ onNavigation }) {
             <ScrollView className="w-full" contentContainerStyle={{alignItems: "center"}}>
                 {isPetDataLoaded && petData.map((pet, index) => (
                     <View key={index} className="flex flex-col w-11/12 items-center">
-                        <Pressable className="flex flex-row w-11/12 h-32 mt-5 rounded-xl" onPress={() => console.log("I've been pressed!")}>
+                        <Pressable className="flex flex-row w-11/12 h-32 mt-5 rounded-xl" onPress={() => onNavigatePet(pet)}>
                             <Image source={{uri: pet.url}} className="w-2/5 h-full rounded-xl" />
                             <View className="flex-1 flex-col pl-4 justify-center">
                                 <Text className="font-semibold text-4xl">{pet.name}</Text>
@@ -109,12 +109,12 @@ function DisplayPets({ onNavigation }) {
     );
 }
 
-export default function Pets({ receiveNavigation }) {
+export default function Pets({ receiveNavigation, receivePetNavigation }) {
     function handleNavigation(page) {
         receiveNavigation(page)
     }
 
     return (
-        <DisplayPets onNavigation={(page) => handleNavigation(page)} />
+        <DisplayPets onNavigation={(page) => handleNavigation(page)} onNavigatePet={(pet) => receivePetNavigation(pet)} />
     );
 }
