@@ -106,7 +106,7 @@ function VetPageScreen({ navigation, route }) {
 
   return (
     <View className="flex-1 bg-white">
-      <VetPage onReceiveIndex={vetIndex} onReceiveViewAppointments={(page, index) => navigation.navigate(page, {currentVetIndex: index})} />
+      <VetPage onReceiveIndex={vetIndex} onReceiveViewAppointments={(page, index) => navigation.navigate(page, {currentVetIndex: index})} receiveBack={() => navigation.goBack()} />
     </View>
   );
 }

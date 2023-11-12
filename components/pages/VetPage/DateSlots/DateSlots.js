@@ -46,27 +46,31 @@ function DisplayDateSlots({ receivedVetIndex, onConfirm }) {
 
     return (
         <View className="flex flex-col w-full h-full">
-            <Text className="mt-12 self-center font-bold text-4xl">{placesList[receivedVetIndex].name}'s upcoming availability</Text>
-            <Calendar
-                className='mt-24 w-11/12 self-center rounded-xl shadow-2xl shadow-black'
-                theme={{
-                    todayTextColor: "#45e14f",
-                    arrowColor: "#45e14f"
-                }}
-                minDate={currentDate}
-                onDayPress={day => {setSelected(day.dateString)}}
-                markedDates={{
-                    [selected]: {selected: true, disableTouchEvent: true, selectedColor: '#45e14f'}
-                }}
-                enableSwipeMonths={true}
-                allowSelectionOutOfRange={false}
-            />
-            <Pressable
-                className='mt-5 w-2/5 h-16 self-center rounded-xl bg-petgreen active:bg-activepetgreen justify-center'
-                onPress={() => (selected ? onConfirm(selected) : alert())}
-            >
-                <Text className='font-bold text-black text-2xl self-center'>Confirm</Text>
-            </Pressable>
+            <View className="flex w-full h-48 pb-10 rounded-b-xl justify-center items-center bg-petgreen">
+                <Text className="mt-12 self-center font-bold text-center text-4xl">{placesList[receivedVetIndex].name}'s upcoming availability</Text>
+            </View>
+            <View className="flex-1 flex flex-col w-full py-10 space-y-8 justify-center">
+                <Calendar
+                    className='flex w-11/12 h-[400px] justify-center self-center rounded-xl shadow-2xl shadow-black'
+                    theme={{
+                        todayTextColor: "#45e14f",
+                        arrowColor: "#45e14f"
+                    }}
+                    minDate={currentDate}
+                    onDayPress={day => {setSelected(day.dateString)}}
+                    markedDates={{
+                        [selected]: {selected: true, disableTouchEvent: true, selectedColor: '#45e14f'}
+                    }}
+                    enableSwipeMonths={true}
+                    allowSelectionOutOfRange={false}
+                />
+                <Pressable
+                    className='mt-5 w-2/5 h-16 self-center rounded-xl bg-petgreen active:bg-activepetgreen justify-center'
+                    onPress={() => (selected ? onConfirm(selected) : alert())}
+                >
+                    <Text className='font-bold text-black text-2xl self-center'>Confirm</Text>
+                </Pressable>
+            </View>
         </View>
     );
 }

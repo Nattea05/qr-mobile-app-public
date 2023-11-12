@@ -4,6 +4,7 @@ import { ref as ref_db, set, onValue} from "firebase/database";
 import { db, auth } from "../../../../../../firebaseConfig";
 import { useState, useEffect } from 'react';
 import { formatDate } from "../TimeSlots"
+import moment from 'moment'
 import DropDownPicker from 'react-native-dropdown-picker';
 
 function DisplaySelectPet({ receivedData, onConfirm }) {
@@ -12,8 +13,9 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
     const [items, setItems] = useState([])
     const [isPetDataLoaded, setIsPetDataLoaded] = useState(false)
     const [uid, setUid] = useState('');
-    const date = formatDate(receivedData.date)[0]
     const [text, onChangeText] = useState('');
+    const [clinicData, setClinicData] = useState([])
+    const [isClinicDataLoaded, setIsClinicDataLoaded] = useState(false)
 
     function falseAuth() {
         return (
@@ -39,8 +41,17 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
                 }) : null}
                 setIsPetDataLoaded(true)
             })
+
+            const clinicRef = ref_db(db, "places/place" + (receivedData.vetIndex + 1).toString())
+            const clinicListener = onValue(clinicRef, (snapshot) => {
+                const data = snapshot.val()
+                setClinicData(data)
+                setIsClinicDataLoaded(true)
+            })
+
             return () => {
                 valueListener();
+                clinicListener()
             }
         }
     }, [uid])
@@ -49,9 +60,11 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
 
     return (
         <View className="flex flex-col w-full h-full items-center">
-            <Text className="mt-12 self-center font-bold text-xl">
-                {receivedData.date}, {receivedData.slot}, {receivedData.vetIndex}, {date}
-            </Text>
+            <View className="flex w-full h-48 pt-8 rounded-b-xl justify-center items-center bg-petgreen">
+                <Text className="self-center font-bold text-4xl">{clinicData.name}</Text>
+                <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.date).format("MMMM Do YYYY")}</Text>
+                <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.slot, "HH:mm").format("h:mm A")}</Text>
+            </View>
             <Text className="mt-8 self-center font-bold text-2xl">Who's going?</Text>
             {isPetDataLoaded && <DropDownPicker
                 className="mt-5 w-10/12 h-16 self-center border-2 border-gray-200"

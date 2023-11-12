@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ref as ref_db, onValue} from "firebase/database";
+import { ref as ref_db, onValue } from "firebase/database";
 import { ref as ref_storage, getDownloadURL, listAll, getMetadata } from "firebase/storage";
 import { db, storage } from "../../firebaseConfig";
 

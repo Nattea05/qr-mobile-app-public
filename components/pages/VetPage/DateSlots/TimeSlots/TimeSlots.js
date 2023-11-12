@@ -37,8 +37,10 @@ function DisplayTimeSlots({ receivedDate, receivedVetIndex, confirmTime }) {
 
     return (
         <View className="flex flex-col w-full h-full">
-            <Text className="mt-12 self-center font-bold text-4xl">Upcoming Availability</Text>
-            <Text className="mt-5 self-center font-bold text-3xl">{date}</Text>
+            <View className="flex w-full h-48 pb-10 rounded-b-xl justify-center items-center bg-petgreen">
+                <Text className="mt-12 self-center font-bold text-4xl">Upcoming Availability</Text>
+                <Text className="mt-5 self-center font-bold text-3xl">{date}</Text>
+            </View>
             <NativeBaseProvider>
                 <View>
                     <TimeSlotPicker

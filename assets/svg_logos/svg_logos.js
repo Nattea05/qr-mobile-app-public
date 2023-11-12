@@ -31,3 +31,19 @@ export function VisibilityOff({ width, height }) {
         </Svg>
     )
 }
+
+export function PhoneNumber({ width, height, fill }) {
+    return (
+        <Svg xmlns="http://www.w3.org/2000/svg" height={height} width={width} viewBox="0 -960 960 960" >
+            <Path d="M795-120q-116 0-236.5-56T335-335Q232-438 176-558.5T120-795q0-19 13-32t32-13h140q14 0 24 10t14 25l27 126q2 14-.5 25.5T359-634L259-533q26 44 55 82t64 72q37 38 78 69.5t86 55.5l95-98q10-11 23-15t26-2l119 26q15 4 25 16t10 27v135q0 19-13 32t-32 13Z" fill={fill}/>
+        </Svg>
+    )
+}
+
+export function Email({ width, height, fill }) {
+    return (
+        <Svg xmlns="http://www.w3.org/2000/svg" height={height} width={width} viewBox="0 -960 960 960">
+            <Path d="M140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm340-302 340-223v-55L480-522 140-740v55l340 223Z" fill={fill}/>
+        </Svg>
+    )
+}
