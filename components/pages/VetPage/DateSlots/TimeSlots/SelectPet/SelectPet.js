@@ -60,8 +60,8 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
 
     return (
         <View className="flex flex-col w-full h-full items-center">
-            <View className="flex w-full h-48 pt-8 rounded-b-xl justify-center items-center bg-petgreen">
-                <Text className="self-center font-bold text-4xl">{clinicData.name}</Text>
+            <View className="flex w-full h-56 pt-8 rounded-b-xl justify-center items-center bg-petgreen">
+                <Text className="self-center font-bold text-4xl text-center">{clinicData.name}</Text>
                 <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.date).format("MMMM Do YYYY")}</Text>
                 <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.slot, "HH:mm").format("h:mm A")}</Text>
             </View>

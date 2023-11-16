@@ -4,7 +4,8 @@ import { ref as ref_storage, getDownloadURL, listAll, getMetadata } from "fireba
 import { db, storage } from '../../../firebaseConfig';
 import { View, Text, Dimensions, Platform, Pressable, ScrollView, Image } from 'react-native';
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
-import { Close, PhoneNumber, Email } from '../../../assets/svg_logos/svg_logos';
+import { Close, PhoneNumber, Email, Time } from '../../../assets/svg_logos/svg_logos';
+import moment from 'moment';
 
 function DisplayPage({ receivedIndex, onViewAppointments, onBack }) {
     const [isLoading, setIsLoading] = useState(true);
@@ -160,7 +161,7 @@ function DisplayPage({ receivedIndex, onViewAppointments, onBack }) {
                         <Pagination
                             dotsLength={interiorList.length}
                             activeDotIndex={activeSlide}
-                            containerStyle={{ backgroundColor: 'transparent', top: '55%', zIndex: 5 }}
+                            containerStyle={{ backgroundColor: 'transparent', top: '65%', zIndex: 5 }}
                             dotStyle={{
                                 width: 10,
                                 height: 10,
@@ -174,33 +175,45 @@ function DisplayPage({ receivedIndex, onViewAppointments, onBack }) {
                     </>
                 }
             </View>
-            <View className="flex w-full p-3 py-8 justify-center space-y-3">
+            <View className="flex w-full p-6 justify-center space-y-3">
                 <Text className="font-semibold text-4xl text-left">{clinicData.name}</Text>
-                <Text className="font-light text-left">{clinicData.address}</Text>
+                <Text className="font-light text-justify">{clinicData.address}</Text>
+                <View className="flex flex-row w-full p-2 space-x-3 items-center">
+                    <Time width={"30"} height={"30"} fill={"#45e14f"} />
+                    <Text className="font-bold text-xl">{moment(clinicData.openTime, "HH:mm").format("h:mm A")} - {moment(clinicData.closeTime, "HH:mm").format("h:mm A")}</Text>
+                </View>
+                <View className="flex flex-row w-full p-2 space-x-3 items-center">
+                    <Email width={"30"} height={"30"} fill={"#45e14f"} />
+                    <Text className="font-bold text-xl">{clinicData.email}</Text>
+                </View>
+                <View className="flex flex-row w-full p-2 space-x-3 items-center">
+                    <PhoneNumber width={"30"} height={"30"} fill={"#45e14f"} />
+                    <Text className="font-bold text-xl">{clinicData.phoneNumber}</Text>
+                </View>
             </View>
             <View className="flex w-full h-80 py-5 justify-center space-y-3 bg-petgreen/50">
                 <Text className="px-3 font-semibold text-3xl text-left">Contact the Veterinarians</Text>
-                <ScrollView className="flex flex-row space-x-[50px] w-full self-center" horizontal={true} contentContainerStyle={{paddingLeft: 50, paddingRight: 50, justifyContent: "center", alignItems: "center"}}>
+                <ScrollView className="flex flex-row space-x-[50px] w-full self-center" horizontal={true} contentContainerStyle={{paddingLeft: 20, paddingRight: 20, justifyContent: "center", alignItems: "center"}}>
                     {isStaffListLoaded && isStaffImagesLoaded &&
                         Object.keys(staffList).map((staffID) => {
                             return (
-                                <View key={staffID} className="flex flex-row w-96 h-full rounded-3xl bg-white">
+                                <View key={staffID} className="flex flex-row w-[365px] h-full rounded-3xl bg-white">
                                     <View className="flex flex-col w-1/2 h-full justify-center items-center space-y-5">
                                         <Image source={{uri: staffImages[staffID].url}} className="w-32 h-32 rounded-full" />
                                         <Text className="font-bold text-2xl text-center">{staffList[staffID].name}</Text>
                                     </View>
                                     <View className="flex flex-col w-1/2 h-full justify-center items-center">
-                                        <View className="flex flex-col w-full h-1/2 p-2 justify-center items-center">
+                                        <View className="flex flex-col w-full h-1/2 p-2 pl-5 justify-center items-start">
                                             <View className="flex flex-col space-y-3">
                                                 <Email width={"30"} height={"30"} fill={"#45e14f"} />
-                                                <Text className="font-medium text-base">{staffList[staffID].email}</Text>
+                                                <Text className="font-medium text-sm">{staffList[staffID].email}</Text>
                                             </View>
                                         </View>
                                         <View className="w-11/12 border-b-2 border-gray-300" />
                                         <View className="flex flex-col w-full h-1/2 p-2 pl-5 space-y-5 justify-center">
                                             <View className="flex flex-col space-y-2">
                                                 <PhoneNumber width={"30"} height={"30"} fill={"#45e14f"} />
-                                                <Text className="font-medium text-xl">{staffList[staffID].phoneNumber}</Text>
+                                                <Text className="font-medium text-sm">{staffList[staffID].phoneNumber}</Text>
                                             </View>
                                         </View>
                                     </View>

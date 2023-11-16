@@ -22,7 +22,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.nattea.qrmobileapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,6 +39,11 @@
           "cameraPermission": "Allow this app to access your camera."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2962d852-40d4-4056-9a3b-dc0acebb2524"
+      }
+    }
   }
 }

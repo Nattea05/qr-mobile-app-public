@@ -46,8 +46,8 @@ function DisplayDateSlots({ receivedVetIndex, onConfirm }) {
 
     return (
         <View className="flex flex-col w-full h-full">
-            <View className="flex w-full h-48 pb-10 rounded-b-xl justify-center items-center bg-petgreen">
-                <Text className="mt-12 self-center font-bold text-center text-4xl">{placesList[receivedVetIndex].name}'s upcoming availability</Text>
+            <View className="flex w-full h-48 pb-5 px-5 rounded-b-xl justify-center items-center bg-petgreen">
+                <Text className="mt-12 self-center font-bold text-center text-2xl">{placesList[receivedVetIndex].name}'s upcoming availability</Text>
             </View>
             <View className="flex-1 flex flex-col w-full py-10 space-y-8 justify-center">
                 <Calendar

@@ -90,7 +90,7 @@ function DisplayProfile({ onNavigate, receiveSignOut }) {
             <View className="flex flex-row w-full h-64 pt-5 rounded-b-2xl bg-petgreen">
                 <View className="flex w-5/12 h-full justify-center items-center">
                     {userImage &&
-                        <Image source={{uri: userImage}} alt='Profile Picture' className="w-44 h-44 rounded-full"/>
+                        <Image source={{uri: userImage}} alt='Profile Picture' className="w-36 h-36 rounded-full"/>
                     }
                     {!userImage &&
                         <ProfilePicture fill={"white"} />
@@ -105,23 +105,27 @@ function DisplayProfile({ onNavigate, receiveSignOut }) {
                 </View>
             </View>
             <View className="flex flex-col w-full p-5 justify-center items-center">
-                <View className="flex flex-row pb-5 border-2 border-petgreen rounded-3xl">
-                    <View className="flex flex-col w-5/12 pl-5 py-5 gap-y-5">
-                        <Text className="p-2 text-lg font-semibold text-gray-400/70 border-b-2 border-gray-400/70">First Name</Text>
-                        <Text className="p-2 text-lg font-semibold text-gray-400/70 border-b-2 border-gray-400/70">Last Name</Text>
-                        <Text className="p-2 text-lg font-semibold text-gray-400/70 border-b-2 border-gray-400/70">Phone Number</Text>
-                        <Text className="p-2 text-lg font-semibold text-gray-400/70 border-b-2 border-gray-400/70">Email</Text>
+                <View className="flex flex-col w-full pb-5 justify-center items-center border-2 border-petgreen rounded-3xl">
+                    <View className="flex flex-col w-11/12">
+                        <Text className="pl-2 pt-2 text-lg font-semibold text-gray-400/70">First Name</Text>
+                        <Text className="p-2 text-lg font-semibold border-b-2 border-gray-400/70">{userData.firstName}</Text>
                     </View>
-                    <View className="flex flex-col w-7/12 pr-5 py-5 gap-y-5">
-                        <Text className="p-2 text-right text-lg font-semibold border-b-2 border-gray-400/70">{userData.firstName}</Text>
-                        <Text className="p-2 text-right text-lg font-semibold border-b-2 border-gray-400/70">{userData.lastName}</Text>
-                        <Text className="p-2 text-right text-lg font-semibold border-b-2 border-gray-400/70">0{userData.phoneNumber}</Text>
-                        <Text className="p-2 text-right text-lg font-semibold border-b-2 border-gray-400/70">{userData.email}</Text>
+                    <View className="flex flex-col w-11/12">
+                        <Text className="pl-2 pt-2 text-lg font-semibold text-gray-400/70">Last Name</Text>
+                        <Text className="p-2 text-lg font-semibold border-b-2 border-gray-400/70">{userData.lastName}</Text>
+                    </View>
+                    <View className="flex flex-col w-11/12">
+                        <Text className="pl-2 pt-2 text-lg font-semibold text-gray-400/70">Phone Number</Text>
+                        <Text className="p-2 text-lg font-semibold border-b-2 border-gray-400/70">0{userData.phoneNumber}</Text>
+                    </View>
+                    <View className="flex flex-col w-11/12">
+                        <Text className="pl-2 pt-2 text-lg font-semibold text-gray-400/70">Email</Text>
+                        <Text className="p-2 text-lg font-semibold border-b-2 border-gray-400/70">{userData.email}</Text>
                     </View>
                 </View>
             </View>
             <Pressable
-                className='mt-8 w-72 h-16 self-center rounded-xl bg-petgreen active:bg-activepetgreen justify-center'
+                className='w-72 h-16 self-center rounded-xl bg-petgreen active:bg-activepetgreen justify-center'
                 onPress={() => onSignOut()}
             >
                 <Text className='font-bold text-black text-2xl self-center'>Log Out</Text>

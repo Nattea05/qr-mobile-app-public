@@ -83,42 +83,24 @@ function DisplayPetProfile({ onSendPetDetails, receivedPetProfile }) {
                 </Pressable>
             </View>
             <View className="flex flex-col w-full p-5 justify-center items-center">
-                <View className="flex flex-col pb-5 border-2 border-petgreen rounded-3xl">
-                    <View className="flex flex-row">
-                        <View className="flex flex-col w-1/3 pl-5 py-5 gap-y-5">
+                <View className="flex flex-col w-full pb-5 border-2 border-petgreen rounded-3xl">
+                    <View className="flex flex-col w-full justify-center items-center">
                         {petData &&
-                            Object.keys(petData).map((field) => {
+                            Object.keys(petData).filter(field => field !== "conditions").map((field) => {
                                 const formattedField = field.charAt(0).toUpperCase() + field.slice(1)
-
-                                if (field === "conditions") {
-
-                                } else {
-                                    return (
-                                        <Text key={field} className="p-2 text-2xl font-semibold text-gray-400/70 border-b-2 border-gray-400/70">{formattedField}</Text>
-                                    )
-                                }
-                            })
-                        }
-                        </View>
-                        <View className="flex flex-col w-2/3 pr-5 py-5 gap-y-5">
-                        {petData &&
-                            Object.keys(petData).map((field) => {
                                 const stringSplit = petData[field].split(" ")
                                 const capitalizedString = stringSplit.map((string) => {
                                     return string.charAt(0).toUpperCase() + string.slice(1)
                                 })
-                                const formattedValue = capitalizedString.join(" ")
-
-                                if (field === "conditions") {
-
-                                } else {
-                                    return (
-                                        <Text key={field} className="p-2 text-right text-2xl font-semibold border-b-2 border-gray-400/70">{formattedValue}</Text>
-                                    )
-                                }
+                                const formattedValue = capitalizedString.join(" ")  
+                                return (
+                                    <View key={field} className="flex flex-col w-11/12">
+                                        <Text className="pl-2 pt-2 text-lg font-semibold text-gray-400/70">{formattedField}</Text>
+                                        <Text className="p-2 text-lg font-semibold border-b-2 border-gray-400/70">{formattedValue}</Text>
+                                    </View>
+                                )
                             })
                         }
-                        </View>
                     </View>
                     <View className="flex flex-col p-2">
                         <Text className="p-2 pl-3 text-2xl font-semibold text-gray-400/70">Conditions</Text>
