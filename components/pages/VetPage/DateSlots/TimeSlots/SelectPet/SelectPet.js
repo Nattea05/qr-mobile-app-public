@@ -3,11 +3,11 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { ref as ref_db, set, onValue} from "firebase/database";
 import { db, auth } from "../../../../../../firebaseConfig";
 import { useState, useEffect } from 'react';
-import { formatDate } from "../TimeSlots"
+import { Back } from '../../../../../../assets/svg_logos/svg_logos';
 import moment from 'moment'
 import DropDownPicker from 'react-native-dropdown-picker';
 
-function DisplaySelectPet({ receivedData, onConfirm }) {
+function DisplaySelectPet({ receivedData, onConfirm, onBack }) {
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState(null)
     const [items, setItems] = useState([])
@@ -60,10 +60,15 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
 
     return (
         <View className="flex flex-col w-full h-full items-center">
-            <View className="flex w-full h-56 pt-8 rounded-b-xl justify-center items-center bg-petgreen">
-                <Text className="self-center font-bold text-4xl text-center">{clinicData.name}</Text>
-                <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.date).format("MMMM Do YYYY")}</Text>
-                <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.slot, "HH:mm").format("h:mm A")}</Text>
+            <View className="flex w-full py-7 px-5 space-y-12 rounded-b-xl justify-center bg-petgreen">
+                <Pressable onPress={() => onBack()} className="top-5 flex flex-col w-14 h-14 justify-center items-center rounded-full bg-white">
+                    <Back width={"36"} height={"36"} fill={"black"} />
+                </Pressable>
+                <View className="flex flex-col w-full space-y-1 justify-center items-center">
+                    <Text className="self-center font-bold text-3xl text-center">{clinicData.name}</Text>
+                    <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.date).format("MMMM Do YYYY")}</Text>
+                    <Text className="self-center font-bold text-center text-2xl">{moment(receivedData.slot, "HH:mm").format("h:mm A")}</Text>
+                </View>
             </View>
             <Text className="mt-8 self-center font-bold text-2xl">Who's going?</Text>
             {isPetDataLoaded && <DropDownPicker
@@ -98,7 +103,7 @@ function DisplaySelectPet({ receivedData, onConfirm }) {
     )
 }
 
-export default function SelectPet({ onReceiveData, successfulConfirmation }) {
+export default function SelectPet({ onReceiveData, successfulConfirmation, onReceiveBack }) {
     function alert () {
         Alert.alert('Incomplete Confirmation', 'Please state your reason or select a pet for the appointment.', [
             {
@@ -134,6 +139,7 @@ export default function SelectPet({ onReceiveData, successfulConfirmation }) {
         <DisplaySelectPet
             receivedData={onReceiveData} 
             onConfirm={(uid, selectedPet, reason) => confirmAppointment(uid, onReceiveData.date, onReceiveData.slot, onReceiveData.vetIndex, selectedPet, reason)}
+            onBack={() => onReceiveBack()}
         />
     )
 }

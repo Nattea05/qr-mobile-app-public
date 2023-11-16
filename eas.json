@@ -10,6 +10,11 @@
     "preview": {
       "distribution": "internal"
     },
+    "qr-mobile-app-production": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "production": {}
   },
   "submit": {

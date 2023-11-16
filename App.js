@@ -115,7 +115,7 @@ function DateSlotsScreen({ navigation, route }) {
   const {currentVetIndex} = route.params;
   return (
     <View className="flex-1 w-full h-full bg-white">
-      <DateSlots onReceiveVetIndex={currentVetIndex} onConfirmed={(page, confirmedDate) => navigation.navigate(page, {confirmedDate: confirmedDate})} />
+      <DateSlots onReceiveVetIndex={currentVetIndex} onConfirmed={(page, confirmedDate) => navigation.navigate(page, {confirmedDate: confirmedDate})} onReceiveBack={() => navigation.goBack()} />
     </View>
   )
 }
@@ -124,7 +124,7 @@ function TimeSlotsScreen({ navigation, route }) {
   const {confirmedDate} = route.params;
   return (
     <View className="flex-1 w-full h-full bg-white">
-      <TimeSlots onReceiveData={confirmedDate} onConfirmedTime={(page, confirmedTime) => navigation.navigate(page, {confirmedTime: confirmedTime})} />
+      <TimeSlots onReceiveData={confirmedDate} onConfirmedTime={(page, confirmedTime) => navigation.navigate(page, {confirmedTime: confirmedTime})} onReceiveBack={() => navigation.goBack()} />
     </View>
   )
 }
@@ -133,7 +133,7 @@ function SelectPetScreen({ navigation, route }) {
   const {confirmedTime} = route.params
   return (
     <View className="flex-1 w-full h-full bg-white">
-      <SelectPet onReceiveData={confirmedTime} successfulConfirmation={(page) => navigation.reset({index: 0, routes: [{ name: "Home" }]})} />
+      <SelectPet onReceiveData={confirmedTime} successfulConfirmation={(page) => navigation.reset({index: 0, routes: [{ name: "Home" }]})} onReceiveBack={() => navigation.goBack()} />
     </View>
   )
 }
