@@ -20,27 +20,40 @@ function DisplaySignUp({ onLogin }) {
 
     function checkPassword() {        
         // Regular expression to check for complexity requirements
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/;       
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/;
         setIsPasswordValid(passwordRegex.test(passwordText));
+        return passwordRegex.test(passwordText)
     }
 
     function checkEmail() {        
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         setIsEmailValid(emailRegex.test(emailText));
+        return emailRegex.test(emailText)
     }
 
     function checkPhoneNumber() {
         const phoneNumberRegex = /^\d{9,10}$/;
         setIsPhoneNumberValid(phoneNumberRegex.test(phoneNumber))
+        return phoneNumberRegex.test(phoneNumber)
+    }
+
+    function checkFirst() {
+        setIsFirstValid(firstName.trim() === '' ? false : true)
+        return firstName.trim() === '' ? false : true
+    }
+
+    function checkLast() {
+        setIsLastValid(lastName.trim() === '' ? false : true)
+        return lastName.trim() === '' ? false : true
     }
 
     function createAccount() {
-        checkPassword()
-        checkEmail()
-        checkPhoneNumber()
-        setIsFirstValid(firstName.trim() === '' ? false : true)
-        setIsLastValid(lastName.trim() === '' ? false : true)
-        const userDetails = [firstName, lastName, phoneNumber, emailText, passwordText, isFirstValid, isLastValid, isPhoneNumberValid, isEmailValid, isPasswordValid]
+        const passwordValidity = checkPassword()
+        const emailValidity = checkEmail()
+        const phoneNumberValidity = checkPhoneNumber()
+        const firstValidity = checkFirst()
+        const lastValidity = checkLast()
+        const userDetails = [firstName, lastName, phoneNumber, emailText, passwordText, firstValidity, lastValidity, phoneNumberValidity, emailValidity, passwordValidity]
         const isMissingDetails = userDetails.some((value) => value === undefined || value === null || value === '' || value === false)
 
         if (!isMissingDetails) {

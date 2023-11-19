@@ -57,28 +57,28 @@ function DisplayActivity({ onNavigation, onModal }) {
 
             const petImagesRef = ref_storage(storage, "pet-profile-pictures/" + uid)
             listAll(petImagesRef)
-            .then((res) => {
-                const promises = res.items.map(async (itemRef) => {
-                    const metadataPromise = getMetadata(itemRef);
-                    const downloadURLPromise = getDownloadURL(itemRef);
-                    try {
-                        const [metadata, url] = await Promise.all([metadataPromise, downloadURLPromise]);
-                        setPetImages(petImages => [...petImages, {imageName: metadata.name, url: url}]);
-                    } catch (error) {
-                        console.error("Error received: ", error);
-                    }
-                });
-                Promise.all(promises)
-                    .then(() => {
-                        setIsPetImagesLoaded(true);
-                    })
-                    .catch((error) => {
-                        console.error("Error received: ", error)
-                    })
-            })
-            .catch((error) => {
-                console.error("Error received: ", error)
-            })
+                .then((res) => {
+                    const promises = res.items.map(async (itemRef) => {
+                        const metadataPromise = getMetadata(itemRef);
+                        const downloadURLPromise = getDownloadURL(itemRef);
+                        try {
+                            const [metadata, url] = await Promise.all([metadataPromise, downloadURLPromise]);
+                            setPetImages(petImages => [...petImages, {imageName: metadata.name, url: url}]);
+                        } catch (error) {
+                            console.error("Error received: ", error);
+                        }
+                    });
+                    Promise.all(promises)
+                        .then(() => {
+                            setIsPetImagesLoaded(true);
+                        })
+                        .catch((error) => {
+                            console.error("Error received: ", error)
+                        })
+                })
+                .catch((error) => {
+                    console.error("Error received: ", error)
+                })
 
             return () => {
                 appointmentsListener()

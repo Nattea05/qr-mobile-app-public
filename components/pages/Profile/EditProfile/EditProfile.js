@@ -35,6 +35,12 @@ function DisplayProfile({ receivedNewImage, receivedUserDetails, onNavigation, o
         }
     })
 
+    function checkPassword() {        
+        // Regular expression to check for complexity requirements
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/;
+        return passwordRegex.test(userData.password)
+    }
+
     function handleDone() {
         const userRef = ref_db(db, "users/" + uid)
         const passwordRef = ref_db(db, "users/" + uid + "/password")
@@ -55,24 +61,36 @@ function DisplayProfile({ receivedNewImage, receivedUserDetails, onNavigation, o
             set(userRef, userData)
 
             if (userData.password !== userDetails.userData.password) {
-                updatePassword(auth.currentUser, userData.password)
-                    .then(() => {
-                        //Password successfully updated
-                    })
-                    .catch((error) => {
-                        if (error.code === "auth/requires-recent-login") {
-                            set(passwordRef, userDetails.userData.password)
-                            Alert.alert('Recent Login Required', 'Updating a password requires a user to be recently logged in, please login again.', [
-                                {
-                                    text: 'OK'
-                                }
-                            ],
-                            {cancelable: true}
-                            )
-                        } else {
-                            console.error("Error updating password: " + error)
+                const passwordValidity = checkPassword()
+                if (passwordValidity) {
+                    updatePassword(auth.currentUser, userData.password)
+                        .then(() => {
+                            //Password successfully updated
+                        })
+                        .catch((error) => {
+                            if (error.code === "auth/requires-recent-login") {
+                                set(passwordRef, userDetails.userData.password)
+                                Alert.alert('Recent Login Required', 'Updating a password requires a user to be recently logged in, please login again.', [
+                                    {
+                                        text: 'OK'
+                                    }
+                                ],
+                                {cancelable: true}
+                                )
+                            } else {
+                                console.error("Error updating password: " + error)
+                            }
+                        })
+                } else {
+                    set(passwordRef, userDetails.userData.password)
+                    Alert.alert('Invalid Password Format', 'Password must be a minimum of 8 characters and must contain at least one capital letter, one digit, and one special character (!, @, #, $, %, ^, &, *)', [
+                        {
+                            text: 'OK'
                         }
-                    })
+                    ],
+                    {cancelable: true}
+                    )
+                }
             }
 
             if (newImage) {
