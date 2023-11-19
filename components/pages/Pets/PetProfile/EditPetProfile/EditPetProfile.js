@@ -1,7 +1,7 @@
 import { Text, View, Pressable, ScrollView, Image, TextInput, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { ref as ref_db, set, remove } from 'firebase/database';
+import { ref as ref_db, set, remove, onValue } from 'firebase/database';
 import { ref as ref_storage, uploadBytes, deleteObject, updateMetadata } from 'firebase/storage';
 import { createStackNavigator } from '@react-navigation/stack';
 import Animated, { Easing, SlideInDown, SlideOutDown } from 'react-native-reanimated';
@@ -267,8 +267,86 @@ export default function EditPetProfile({ onReceivePetDetails, onReceiveDone, onC
         const {ref} = route.params
         const petRef = ref_db(db, "pets/" + ref.uid + "/" + ref.petID)
         const petImageRef = ref_storage(storage, "pet-profile-pictures/" + ref.uid + "/" + ref.petID)
+        const [petAppointments, setPetAppointments] = useState({})
+        const [petHistory, setPetHistory] = useState({})
+        const [petEmrHistory, setPetEmrHistory] = useState({})
+        const [isPetAppointmentsLoaded, setIsPetAppointmentsLoaded] = useState(false)
+        const [isPetHistoryLoaded, setIsPetHistoryLoaded] = useState(false)
+        const [isPetEmrHistoryLoaded, setIsPetEmrHistoryLoaded] = useState(false)
+        
+        useEffect(() => {
+            const petAppointmentRef = ref_db(db, "appointments")
+            const petAppointmentListener = onValue(petAppointmentRef, (snapshot) => {
+                const data = snapshot.val()
+                Object.keys(data).filter(key => data[key].petID === ref.petID).map((key) => setPetAppointments((prevState) => ({
+                    ...prevState,
+                    [key]: data[key]
+                })))
+                setIsPetAppointmentsLoaded(true)
+            })
+
+            return (() => {
+                petAppointmentListener()
+            })
+        }, [])
+
+        useEffect(() => {
+            if (isPetAppointmentsLoaded) {
+                const petAppointmentHistoryRef = ref_db(db, "appointment_history")
+                const petAppointmentHistoryListener = onValue(petAppointmentHistoryRef, (snapshot) => {
+                    const data = snapshot.val()
+                    Object.keys(data).filter(key => data[key].petID === ref.petID).map((key) => setPetHistory((prevState) => ({
+                        ...prevState,
+                        [key]: data[key]
+                    })))
+                    setIsPetHistoryLoaded(true)
+                })
+
+                return (() => {
+                    petAppointmentHistoryListener()
+                })
+            }
+        }, [isPetAppointmentsLoaded])
+
+        useEffect(() => {
+            if (isPetHistoryLoaded) {
+                const petEmrHistoryRef = ref_db(db, "emr_list")
+                const petEmrHistoryListener = onValue(petEmrHistoryRef, (snapshot) => {
+                    const data = snapshot.val()
+                    Object.keys(data).filter(key => data[key].patientID === ref.petID).map((key) => setPetEmrHistory((prevState) => ({
+                        ...prevState,
+                        [key]: data[key]
+                    })))
+                    setIsPetEmrHistoryLoaded(true)
+                })
+
+                return (() => {
+                    petEmrHistoryListener()
+                })
+            }
+        }, [isPetHistoryLoaded])
+
+        // useEffect(() => {
+        //     if (isPetEmrHistoryLoaded) {
+        //         console.log(petAppointments)
+        //         console.log(petHistory)
+        //         console.log(petEmrHistory)
+        //     }
+        // }, [isPetEmrHistoryLoaded])
 
         function removePet() {
+            Object.keys(petAppointments).forEach((key) => {
+                const appointmentRef = ref_db(db, "appointments/" + key)
+                remove(appointmentRef)
+            })
+
+            Object.keys(petHistory).forEach((key) => {
+                const historyRef = ref_db(db, "appointment_history/" + key)
+                const emrRef = ref_db(db, "emr_list/" + key)
+                remove(historyRef)
+                remove(emrRef)
+            })
+
             remove(petRef)
             deleteObject(petImageRef)
                 .then(() => {
@@ -280,6 +358,16 @@ export default function EditPetProfile({ onReceivePetDetails, onReceiveDone, onC
             setTimeout(() => {
                 onConfirmPetRemove()
             }, 500)
+        }
+
+        if (!isPetEmrHistoryLoaded) {
+            return (
+                <Pressable className="flex-1 flex items-center justify-center bg-black/50" onPress={() => navigation.goBack()}>
+                    <View className="flex w-10/12 h-1/3 p-3 items-center justify-center bg-white rounded-2xl">
+                        <Text className="font-bold text-3xl">Fetching data...</Text>
+                    </View>
+                </Pressable>
+            )
         }
 
         return (
