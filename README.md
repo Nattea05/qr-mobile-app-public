@@ -13,6 +13,21 @@ Currently, pet owners lack a proper application that provides functionalities su
 
 With the proposed mobile application, pet owners can effortlessly manage and access their pets' medical information and electronic medical records (EMR) through a single application. The integration of both platforms eliminates the need for pet owners to navigate multiple sources, providing a centralized and user-friendly solution for organizing and viewing their pets’ medical records and information.
 
+## Created With
+**Next.js**
+<br />
+![Next js Icon(1)](https://github.com/user-attachments/assets/a69cddc9-3c7d-4d81-8641-337237cf541f)
+
+
+**Firebase**
+<br />
+![Primary_Vertical_Lockup_Full_Color(1)](https://github.com/user-attachments/assets/e2999f33-cc57-4f2d-8c73-68b6baeefe70)
+
+
+**React Native**
+<br />
+![react 256x256-removebg-preview(1)](https://github.com/user-attachments/assets/8ffe741c-739f-4d5d-b410-ad440f29d01a)
+
 ## Key Features
 **1. QR-based Electronic Pet Medical Records**: Allows owners to easily share access with clinics, reducing time taken to perform administrative work.
 
